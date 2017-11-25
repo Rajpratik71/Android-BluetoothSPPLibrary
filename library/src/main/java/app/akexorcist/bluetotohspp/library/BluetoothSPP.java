@@ -59,7 +59,8 @@ public class BluetoothSPP {
     private String keyword = "";
     private boolean isAndroid = BluetoothState.DEVICE_ANDROID;
     
-    private BluetoothConnectionListener bcl;
+    private BluetoothConnectionListener mBluetoothConnectionListenerSecondary = null;
+    
     private int c = 0;
     
     public BluetoothSPP(Context context) {
@@ -221,8 +222,11 @@ public class BluetoothSPP {
     };
     
     public void stopAutoConnect() {
-        isAutoConnectionEnabled = false;
-    }
+        if (isAutoConnectionEnabled) {
+            isAutoConnectionEnabled = false;
+            
+            mBluetoothConnectionListner = mBluetoothConnectionListnerSecondary;
+        }
     
     public void connect(Intent data) {
         String address = data.getExtras().getString(BluetoothState.EXTRA_DEVICE_ADDRESS);
@@ -259,7 +263,11 @@ public class BluetoothSPP {
     }
     
     public void setAutoConnectionListener(AutoConnectionListener listener) {
+        if (isAutoConnectionEnabled) {
+            mBluetoothConnectionListenerSecondary = listner;
+        }else{
         mAutoConnectionListener = listener;
+        }
     }
     
     public void enable() {
